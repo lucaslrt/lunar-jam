@@ -1,0 +1,60 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://Nodes/Tilesets/ground.tres" type="TileSet" id=1]
+[ext_resource path="res://Sprites/car_trees_etc.png" type="Texture" id=2]
+[ext_resource path="res://Nodes/Scripts/ScreenShake.gd" type="Script" id=3]
+[ext_resource path="res://Nodes/Prefabs/PowerUp.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Nodes/Scripts/Player.gd" type="Script" id=5]
+[ext_resource path="res://Nodes/Prefabs/ChangeStage.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Nodes/Scenes/PauseMenu.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Nodes/Prefabs/DeathCollider.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Nodes/Prefabs/Enemy.tscn" type="PackedScene" id=9]
+
+[node name="Stage1" type="Node2D"]
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 16, 16 )
+collision_layer = 4
+collision_mask = 11
+format = 1
+tile_data = PoolIntArray( 655360, 1, 0, 655361, 1, 0, 655362, 1, 0, 655363, 1, 0, 655364, 1, 0, 655365, 1, 0, 655366, 1, 0, 655367, 1, 0, 655368, 1, 0, 655369, 1, 0, 655370, 1, 0, 655371, 1, 0, 655372, 1, 0, 655373, 1, 0, 655374, 1, 0, 655375, 1, 0, 655376, 1, 0, 655377, 1, 0, 655378, 0, 0, 655379, 0, 0, 655380, 0, 0, 655381, 0, 0, 655382, 0, 0, 655383, 0, 0, 655384, 0, 0, 655385, 0, 0, 655386, 0, 0, 655387, 0, 0, 655388, 0, 0, 655389, 0, 0, 655390, 0, 0, 655391, 0, 0, 655392, 0, 0, 655393, 0, 0, 655394, 0, 0, 655395, 5, 0 )
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+scroll_base_scale = Vector2( 0.5, 0.5 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2( 336, 0 )
+
+[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 1, -13 )
+texture = ExtResource( 2 )
+centered = false
+
+[node name="ScreenShake" type="Node2D" parent="."]
+editor/display_folded = true
+script = ExtResource( 3 )
+
+[node name="Tween" type="Tween" parent="ScreenShake"]
+
+[node name="Player" parent="." instance=ExtResource( 4 )]
+position = Vector2( 175, 37.5 )
+script = ExtResource( 5 )
+
+[node name="ChangeStage" parent="." instance=ExtResource( 6 )]
+position = Vector2( 729, 111.5 )
+target_stage = "res://Nodes/Scenes/Stage2.tscn"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+editor/display_folded = true
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource( 7 )]
+visible = false
+
+[node name="DeathCollider" parent="." instance=ExtResource( 8 )]
+position = Vector2( 600, 200 )
+scale = Vector2( 3.94, 1 )
+
+[node name="Enemy" parent="." instance=ExtResource( 9 )]
+position = Vector2( 596, 13 )
+[connection signal="tween_completed" from="ScreenShake/Tween" to="ScreenShake" method="_on_Tween_tween_completed"]
